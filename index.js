@@ -40,9 +40,13 @@ async function run() {
     });
 
     //POST id
-    app.post("/services", (req, res) => {
+    app.post("/services", async (req, res) => {
       const selectedService = req.body;
-      console.log(selectedService);
+      const selectedServiceCollection = client
+        .db("helping-hands-db")
+        .collection("events");
+      const result = await selectedServiceCollection.insertOne(selectedService);
+      res.send(result);
     });
   } finally {
   }
