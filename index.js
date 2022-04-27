@@ -52,7 +52,13 @@ async function run() {
     app.post("/services", async (req, res) => {
       const selectedService = req.body;
 
-      const result = await selectedServiceCollection.insertOne(selectedService);
+      const doc = {
+        name: selectedService.name,
+        img: selectedService.img,
+        detail: selectedService.detail,
+      };
+      console.log(selectedService);
+      const result = await selectedServiceCollection.insertOne(doc);
       res.send(result);
     });
 
