@@ -49,15 +49,15 @@ async function run() {
       const result = await serviceCollection.insertOne(addedService);
       res.send(result);
     });
-    //Adding Services to the events(Selection)
+    //Adding Unique Services to the events(Selection)
     app.post("/services", async (req, res) => {
       const selectedService = req.body;
-      // const query = { id: selectedService._id };
 
       const doc = {
         name: selectedService.name,
         img: selectedService.img,
         detail: selectedService.detail,
+        bgcolor: selectedService.bgcolor,
       };
       const foundServiceCursor = selectedServiceCollection.find(doc);
       const foundService = await foundServiceCursor.toArray();
@@ -65,11 +65,10 @@ async function run() {
       if (foundService.length !== 0) {
         console.log("Service already exists");
       } else {
-        console.log("Service added ");
+        console.log("Service added");
         const result = await selectedServiceCollection.insertOne(doc);
         res.send(result);
       }
-      // console.log(query);
     });
 
     //Get the events
@@ -88,6 +87,17 @@ async function run() {
       console.log(query);
       const result = await selectedServiceCollection.deleteOne(query);
 
+      res.send(result);
+    });
+    //Adding Registered Volunteers to database
+    const registeredVolunteerCollection = client
+      .db("helping-hands-db")
+      .collection("registered-volunteers");
+    app.post("/register-as-volunteer", async (req, res) => {
+      const registeredVolunteer = req.body;
+      const result = await registeredVolunteerCollection.insertOne(
+        registeredVolunteer
+      );
       res.send(result);
     });
   } finally {
